@@ -3,467 +3,326 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Pokémon Card Scanner</title>
+<meta name="theme-color" content="#FFCB05"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>PokéDex Colección</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --y:#FFCB05;--yi:#1a1400;
-  --blue:#1A237E;--blue2:#3949AB;--blue3:#E8EAF6;
+  --y:#FFCB05;--yi:#1a1400;--blue:#1A237E;--blue2:#3949AB;--blue3:#E8EAF6;
   --red:#E53935;--red2:#FFEBEE;--green:#2E7D32;--green2:#E8F5E9;
   --orange:#F57C00;--orange2:#FFF3E0;--purple:#6A1B9A;--purple2:#F3E5F5;
   --bg:#F5F7FF;--surface:#fff;--text:#0D0D1A;--muted:#6B7280;--border:#E5E7EB;
   --radius:14px;--radius-sm:10px;--shadow:0 2px 16px rgba(26,35,126,.09);
 }
-html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100dvh}
-/* ── LAYOUT ── */
-.app{max-width:1100px;margin:0 auto;padding:0 0 20px}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;
-  display:flex;align-items:center;gap:12px;margin-bottom:20px;
-  box-shadow:0 1px 8px rgba(26,35,126,.06);position:sticky;top:0;z-index:50}
-.logo{width:38px;height:38px;border-radius:50%;background:var(--y);
-  display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(255,203,5,.4)}
-.logo i{font-size:20px;color:var(--yi)}
-.app-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100dvh;overflow-x:hidden}
+.app{display:flex;flex-direction:column;min-height:100dvh;max-width:430px;margin:0 auto}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.logo{width:36px;height:36px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo i{font-size:18px;color:var(--yi)}
+.app-title{font-size:16px;font-weight:700;letter-spacing:-.3px}
 .app-title span{color:var(--blue2)}
-.content{padding:0 20px}
-/* ── TABS ── */
-.nav-tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--radius);padding:4px;
-  box-shadow:var(--shadow)}
-.nav-tab{flex:1;padding:9px 8px;border-radius:var(--radius-sm);border:none;
-  background:transparent;cursor:pointer;font-family:inherit;font-size:13px;
-  font-weight:500;color:var(--muted);display:flex;align-items:center;
-  justify-content:center;gap:6px;transition:all .15s}
-.nav-tab i{font-size:16px}
-.nav-tab.active{background:var(--blue2);color:#fff;box-shadow:0 2px 8px rgba(57,73,171,.3)}
-.nav-tab:hover:not(.active){background:var(--bg);color:var(--text)}
-.nav-badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;
-  padding:1px 5px;border-radius:99px;min-width:16px;text-align:center}
-.nav-tab.active .nav-badge{background:rgba(255,255,255,.3)}
-/* ── PANELS ── */
-.panel{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);
-  overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}
-.panel-hdr{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;
-  align-items:center;gap:8px;font-weight:600;font-size:14px}
-.panel-hdr i{font-size:17px;color:var(--blue2)}
-.panel-body{padding:16px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
-/* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
-  border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;
-  font-family:inherit;transition:all .15s}
-.btn:active{transform:scale(.97)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn-primary{background:var(--y);color:var(--yi)}
-.btn-primary:hover{background:#e6b800}
-.btn-blue{background:var(--blue2);color:#fff}
-.btn-blue:hover{background:var(--blue)}
-.btn-ghost{background:var(--bg);border:1.5px solid var(--border);color:var(--text)}
-.btn-ghost:hover{border-color:var(--blue2)}
-.btn-danger{background:var(--red2);border:1px solid #FFCDD2;color:var(--red)}
-.btn-green{background:var(--green2);border:1px solid #A5D6A7;color:var(--green)}
-.btn-sm{padding:5px 10px;font-size:11px;border-radius:7px}
-.btn-block{width:100%;justify-content:center;margin-bottom:8px}
-/* ── VIDEO / SCANNER ── */
-.video-wrap{position:relative;width:100%;aspect-ratio:4/3;background:#000;
-  border-radius:10px;overflow:hidden;margin-bottom:12px}
+.topbar-sub{font-size:11px;color:var(--muted)}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;
+  background:var(--surface);border-top:1px solid var(--border);display:flex;z-index:100;
+  padding-bottom:env(safe-area-inset-bottom,0)}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px 0 8px;border:none;background:transparent;cursor:pointer;font-family:inherit;
+  transition:all .15s;position:relative}
+.bnav-item i{font-size:22px;color:var(--muted);transition:color .15s}
+.bnav-item span{font-size:10px;font-weight:500;color:var(--muted);transition:color .15s}
+.bnav-item.active i,.bnav-item.active span{color:var(--blue2)}
+.bnav-scan{background:var(--y);border-radius:20px;padding:10px 18px 8px!important;margin:-12px 0 0;box-shadow:0 4px 16px rgba(255,203,5,.4)}
+.bnav-scan i{font-size:24px;color:var(--yi)!important}
+.bnav-scan span{color:var(--yi)!important;font-weight:700!important}
+.bnav-badge{position:absolute;top:6px;right:14px;background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:1px 5px;min-width:16px;text-align:center}
+
+/* SCREENS */
+.screen{display:none;padding:16px 16px 90px;min-height:60vh}
+.screen.active{display:block}
+
+/* PANEL */
+.panel{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px}
+.panel-hdr{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.panel-hdr i{font-size:16px;color:var(--blue2)}
+.panel-body{padding:14px}
+
+/* SCANNER */
+.cam-ph{width:100%;aspect-ratio:4/3;background:var(--blue);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:12px}
+.cam-ph i{font-size:48px;color:rgba(255,255,255,.4)}
+.cam-ph p{font-size:15px;font-weight:600;color:#fff}
+.cam-ph small{font-size:11px;color:rgba(255,255,255,.5)}
+.video-wrap{position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:10px;overflow:hidden;margin-bottom:12px}
 #video{width:100%;height:100%;object-fit:cover;display:block}
-.scan-overlay{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center}
-.scan-frame{width:58%;aspect-ratio:.72;border:2.5px solid var(--y);border-radius:8px;
-  box-shadow:0 0 0 9999px rgba(0,0,0,.45);position:relative}
+.scan-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.scan-frame{width:58%;aspect-ratio:.72;border:2.5px solid var(--y);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.45);position:relative}
 .sf-c{position:absolute;width:16px;height:16px;border-color:var(--y);border-style:solid}
 .sf-tl{top:-2px;left:-2px;border-width:3px 0 0 3px;border-radius:3px 0 0 0}
 .sf-tr{top:-2px;right:-2px;border-width:3px 3px 0 0;border-radius:0 3px 0 0}
 .sf-bl{bottom:-2px;left:-2px;border-width:0 0 3px 3px;border-radius:0 0 0 3px}
 .sf-br{bottom:-2px;right:-2px;border-width:0 3px 3px 0;border-radius:0 0 3px 0}
-.sf-line{position:absolute;left:4px;right:4px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--y),transparent);
-  animation:scanmove 1.8s ease-in-out infinite}
+.sf-line{position:absolute;left:4px;right:4px;height:2px;background:linear-gradient(90deg,transparent,var(--y),transparent);animation:scanmove 1.8s ease-in-out infinite}
 @keyframes scanmove{0%,100%{top:5%;opacity:0}10%{opacity:1}90%{opacity:1}95%{top:92%;opacity:0}}
-.cam-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;
-  font-size:11px;color:rgba(255,255,255,.75);font-weight:500}
-.cam-ph{width:100%;aspect-ratio:4/3;background:var(--blue);border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:8px;cursor:pointer;margin-bottom:12px}
-.cam-ph i{font-size:44px;color:rgba(255,255,255,.4)}
-.cam-ph p{font-size:15px;font-weight:600;color:#fff}
-.cam-ph small{font-size:11px;color:rgba(255,255,255,.5)}
-.file-zone{border:2px dashed var(--border);border-radius:10px;padding:18px;
-  text-align:center;cursor:pointer;transition:all .15s;color:var(--muted);margin-bottom:10px}
+.cam-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.75);font-weight:500}
+.file-zone{border:2px dashed var(--border);border-radius:10px;padding:18px;text-align:center;cursor:pointer;color:var(--muted);margin-bottom:10px;transition:all .15s}
 .file-zone:hover{border-color:var(--blue2);background:var(--blue3);color:var(--blue2)}
 .file-zone i{font-size:26px;display:block;margin-bottom:5px;opacity:.5}
-#fileInput{display:none}
-/* ── STATUS ── */
-.status{padding:10px 14px;border-radius:9px;font-size:13px;font-weight:500;
-  display:flex;align-items:center;gap:8px;margin-bottom:10px}
+#fileIn{display:none}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--y);color:var(--yi)}
+.btn-blue{background:var(--blue2);color:#fff}
+.btn-ghost{background:var(--bg);border:1.5px solid var(--border);color:var(--text)}
+.btn-block{width:100%;justify-content:center;margin-bottom:8px}
+.btn-sm{padding:6px 12px;font-size:11px}
+
+/* STATUS */
+.status{padding:10px 14px;border-radius:9px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .s-idle{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
 .s-scan{background:#EEF2FF;color:var(--blue2)}
 .s-ok{background:var(--green2);color:var(--green)}
 .s-err{background:var(--red2);color:var(--red)}
-.s-scan i{animation:spin .8s linear infinite}
+.s-scan i,.spin{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* ── CONFIDENCE ── */
-.conf-wrap{margin-bottom:10px}
-.conf-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px}
-.conf-track{height:5px;background:var(--border);border-radius:99px;overflow:hidden}
-.conf-fill{height:100%;border-radius:99px;transition:width .4s,background .4s}
-/* ── MATCH CARD ── */
-.match-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;
-  padding:12px;display:flex;gap:12px;align-items:flex-start}
-.match-thumb{width:58px;height:81px;border-radius:7px;object-fit:cover;
-  background:var(--blue3);flex-shrink:0;box-shadow:var(--shadow)}
-.match-info{flex:1;min-width:0}
-.match-name{font-size:15px;font-weight:700;margin-bottom:2px;line-height:1.2}
-.match-sub{font-size:11px;color:var(--muted);margin-bottom:6px}
-.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
-.tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;
-  padding:2px 7px;border-radius:99px;border:1px solid}
-.tag-local{background:var(--green2);border-color:#A5D6A7;color:var(--green)}
-.tag-api{background:var(--orange2);border-color:#FFCC80;color:var(--orange)}
-.tag-rare{background:var(--blue3);border-color:#9FA8DA;color:var(--blue2)}
-.tag-type{background:var(--purple2);border-color:#CE93D8;color:var(--purple)}
-.tag-inv{background:#E3F2FD;border-color:#90CAF9;color:#1565C0}
-.tag-new{background:var(--green2);border-color:#A5D6A7;color:var(--green)}
-.match-price{font-size:15px;font-weight:700;color:var(--orange);margin-bottom:4px}
-.match-conf{font-size:10px;color:var(--muted)}
-.ham-bar{height:3px;background:var(--border);border-radius:99px;margin-top:3px;overflow:hidden}
-.ham-fill{height:100%;border-radius:99px}
-.inv-indicator{display:flex;align-items:center;gap:6px;padding:6px 10px;
-  border-radius:8px;font-size:12px;font-weight:600;margin-top:6px}
+
+/* SHEET */
+.sheet-back{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.sheet-back.open{display:flex}
+.sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px;width:100%;max-width:430px;animation:sup .25s ease;padding-bottom:max(32px,env(safe-area-inset-bottom))}
+@keyframes sup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 16px}
+.sheet-card-row{display:flex;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.sheet-thumb{width:66px;height:92px;border-radius:7px;object-fit:cover;background:var(--blue3);flex-shrink:0;box-shadow:var(--shadow)}
+.sheet-name{font-size:18px;font-weight:700;margin-bottom:3px}
+.sheet-sub{font-size:12px;color:var(--muted);margin-bottom:8px}
+.price-pill{display:inline-flex;align-items:center;gap:5px;background:#FFFDE7;border:1px solid #FBC02D44;border-radius:99px;padding:4px 12px;font-size:13px;font-weight:600;color:#F57F17}
+.inv-ind{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:600;margin-top:8px}
 .inv-has{background:var(--green2);color:var(--green)}
 .inv-none{background:var(--red2);color:var(--red)}
-/* ── RESULT IMG ── */
-.result-ph{aspect-ratio:.72;background:var(--blue3);border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:8px;color:var(--muted);margin-bottom:12px}
-.result-ph i{font-size:32px;opacity:.4}
-.result-ph p{font-size:13px}
-.result-img-wrap{position:relative;margin-bottom:12px}
-#resultImg{width:100%;border-radius:10px;display:block;box-shadow:0 8px 28px rgba(26,35,126,.15)}
-.result-badge{position:absolute;top:10px;right:10px;background:var(--green);
-  color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;
-  display:flex;align-items:center;gap:4px}
-/* ── STATS BOXES ── */
-.stat-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;
-  padding:12px;text-align:center}
-.stat-val{font-size:22px;font-weight:700;color:var(--blue2)}
-.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;font-weight:500}
-/* ── INVENTORY ── */
-.inv-summary{background:var(--blue);border-radius:var(--radius);padding:20px;
-  margin-bottom:16px;display:grid;grid-template-columns:repeat(4,1fr)}
-@media(max-width:500px){.inv-summary{grid-template-columns:repeat(2,1fr);gap:10px 0}}
+.cond-sel{width:100%;padding:10px;border-radius:8px;border:1.5px solid var(--border);font-family:inherit;font-size:13px;background:var(--surface);color:var(--text);margin-bottom:12px}
+.qty-big{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.qty-big button{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-big span{font-size:22px;font-weight:700;min-width:28px;text-align:center}
+.sheet-add{width:100%;padding:14px;border-radius:10px;border:none;background:var(--blue2);color:#fff;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.sheet-add.added{background:var(--green)}
+.sheet-skip{width:100%;padding:11px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13px;cursor:pointer}
+.field-lbl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px}
+
+/* MATCH */
+.match-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;gap:10px;margin-bottom:10px}
+.match-thumb{width:54px;height:75px;border-radius:6px;object-fit:cover;background:var(--blue3);flex-shrink:0;box-shadow:var(--shadow)}
+.match-name{font-size:15px;font-weight:700;margin-bottom:2px}
+.match-sub{font-size:11px;color:var(--muted);margin-bottom:6px}
+.match-price{font-size:14px;font-weight:700;color:var(--orange);margin-bottom:4px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;border:1px solid}
+.tag-ai{background:var(--purple2);border-color:#CE93D8;color:var(--purple)}
+.tag-rare{background:var(--blue3);border-color:#9FA8DA;color:var(--blue2)}
+.tag-type{background:var(--orange2);border-color:#FFCC80;color:var(--orange)}
+
+/* RESULT */
+.res-ph{aspect-ratio:.72;background:var(--blue3);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);margin-bottom:12px}
+.res-ph i{font-size:30px;opacity:.4}
+#resultImg{width:100%;border-radius:10px;display:block;box-shadow:0 6px 24px rgba(26,35,126,.15);margin-bottom:12px}
+
+/* API KEY MODAL */
+.modal-back{position:fixed;inset:0;background:rgba(13,13,26,.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-back.hidden{display:none}
+.modal{background:var(--surface);border-radius:var(--radius);padding:24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fadeup .25s ease}
+@keyframes fadeup{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-icon{width:52px;height:52px;background:var(--blue3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--blue2)}
+.modal-title{font-size:18px;font-weight:700}
+.modal-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.modal-link{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--blue2);background:var(--blue3);padding:9px 12px;border-radius:var(--radius-sm);text-decoration:none}
+.modal-input{width:100%;padding:11px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:13px;font-family:inherit;color:var(--text)}
+.modal-input:focus{outline:none;border-color:var(--blue2)}
+.modal-hint{font-size:11px;color:var(--muted);line-height:1.5}
+.modal-save{width:100%;padding:13px;border-radius:var(--radius-sm);border:none;background:var(--blue2);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.modal-skip{width:100%;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13px;cursor:pointer}
+
+/* INVENTORY */
+.inv-summary{background:var(--blue);border-radius:var(--radius);padding:18px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr 1fr}
 .is-item{text-align:center;padding:0 8px}
 .is-item+.is-item{border-left:1px solid rgba(255,255,255,.15)}
-@media(max-width:500px){.is-item:nth-child(2n+1){border-left:none}
-  .is-item:nth-child(3),.is-item:nth-child(4){border-top:1px solid rgba(255,255,255,.15);padding-top:10px}}
 .is-val{font-size:20px;font-weight:700;color:#fff}
 .is-lbl{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px;font-weight:500}
-.inv-search{position:relative;margin-bottom:12px}
-.inv-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);
-  color:var(--muted);font-size:17px;pointer-events:none}
-.inv-search input{width:100%;padding:10px 12px 10px 38px;border-radius:var(--radius-sm);
-  border:1.5px solid var(--border);background:var(--surface);font-size:13px;
-  font-family:inherit;color:var(--text)}
+.inv-search{position:relative;margin-bottom:10px}
+.inv-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none}
+.inv-search input{width:100%;padding:10px 12px 10px 36px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:13px;font-family:inherit;color:var(--text);background:var(--surface)}
 .inv-search input:focus{outline:none;border-color:var(--blue2)}
-.inv-list{display:flex;flex-direction:column;gap:6px}
-.inv-row{background:var(--surface);border:1px solid var(--border);border-radius:9px;
-  padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);
-  transition:box-shadow .15s}
-.inv-row:hover{box-shadow:0 4px 16px rgba(26,35,126,.12)}
-.inv-thumb{width:38px;height:53px;border-radius:5px;object-fit:cover;
-  background:var(--blue3);flex-shrink:0}
-.inv-details{flex:1;min-width:0}
+.inv-row{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.inv-thumb{width:38px;height:53px;border-radius:5px;object-fit:cover;background:var(--blue3);flex-shrink:0}
+.inv-info{flex:1;min-width:0}
 .inv-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .inv-sub{font-size:10px;color:var(--muted);margin-top:1px}
 .inv-price{font-size:11px;color:var(--orange);font-weight:600;margin-top:2px}
-.cond-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;
-  border-radius:4px;margin-left:4px;vertical-align:middle}
+.cond-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:middle}
 .cond-NM{background:var(--green2);color:var(--green)}
 .cond-LP{background:#E3F2FD;color:#1565C0}
 .cond-MP{background:var(--orange2);color:var(--orange)}
 .cond-HP,.cond-D{background:var(--red2);color:var(--red)}
 .qty-ctrl{display:flex;align-items:center;gap:5px;flex-shrink:0}
-.qb{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border);
-  background:var(--bg);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .12s}
+.qb{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .qb:hover{border-color:var(--blue2);color:var(--blue2)}
 .qn{font-size:14px;font-weight:700;min-width:22px;text-align:center}
-/* ── DECK BUILDER ── */
-.deck-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);
-  padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
-.deck-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
-.deck-meta{flex:1}
-.tier-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;
-  border-radius:4px;margin-bottom:6px}
+
+/* DECKS */
+.deck-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.deck-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.tier-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-bottom:5px}
 .tier-S{background:#FFEBEE;color:var(--red)}
 .tier-A{background:var(--orange2);color:var(--orange)}
 .tier-B{background:var(--blue3);color:var(--blue2)}
-.deck-name{font-size:17px;font-weight:700;margin-bottom:2px}
+.deck-name{font-size:16px;font-weight:700}
 .deck-style{font-size:11px;color:var(--muted)}
-.pct-circle{width:56px;height:56px;flex-shrink:0}
+.pct-circle{width:52px;height:52px;flex-shrink:0}
 .pct-ring{transform:rotate(-90deg);transform-origin:50% 50%}
-.prog-track{height:7px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.prog-track{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:8px}
 .prog-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
-.deck-desc{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6}
-.deck-nums{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.deck-num{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;
-  background:var(--bg);border:1px solid var(--border);color:var(--muted)}
-.deck-cost{font-size:12px;color:var(--muted);margin-bottom:10px}
-.deck-cost strong{color:var(--text)}
-.deck-complete{display:flex;align-items:center;gap:8px;background:var(--green2);
-  border-radius:var(--radius-sm);padding:10px 12px;color:var(--green);
-  font-size:13px;font-weight:600;margin-bottom:8px}
-.missing-key{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
-.chip{font-size:10px;font-weight:500;padding:3px 8px;border-radius:99px;
-  display:inline-flex;align-items:center;gap:3px;border:1px solid}
+.deck-desc{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.6}
+.deck-cost{font-size:12px;color:var(--muted);margin-bottom:8px}
+.deck-complete{display:flex;align-items:center;gap:8px;background:var(--green2);border-radius:var(--radius-sm);padding:10px 12px;color:var(--green);font-size:13px;font-weight:600;margin-bottom:8px}
+.missing-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.chip{font-size:10px;font-weight:500;padding:3px 8px;border-radius:99px;display:inline-flex;align-items:center;gap:3px;border:1px solid}
 .chip-miss{background:var(--red2);border-color:#FFCDD2;color:var(--red)}
-.chip-warn{background:var(--orange2);border-color:#FFCC80;color:var(--orange)}
-/* Deck detail table */
-.slot-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
-.slot-table th{text-align:left;font-size:10px;font-weight:600;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.05em;padding:4px 8px;border-bottom:2px solid var(--border)}
-.slot-table td{padding:5px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.collapse-btn{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:inherit}
+.collapse-content{display:none;margin-top:8px;overflow-x:auto}
+.collapse-content.open{display:block}
+.slot-table{width:100%;border-collapse:collapse;font-size:11px}
+.slot-table th{text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:4px 6px;border-bottom:2px solid var(--border)}
+.slot-table td{padding:5px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
 .slot-table tr:last-child td{border-bottom:none}
-.slot-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;
-  font-weight:600;padding:2px 6px;border-radius:99px}
-.ss-complete{background:var(--green2);color:var(--green)}
-.ss-partial{background:var(--orange2);color:var(--orange)}
-.ss-missing{background:var(--red2);color:var(--red)}
-.role-icon{font-size:11px;color:var(--muted)}
-/* ── ADD TO INV SHEET ── */
-.sheet-back{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;
-  display:none;align-items:flex-end;justify-content:center}
-.sheet-back.open{display:flex}
-.sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px 32px;
-  width:100%;max-width:480px;animation:sup .25s ease;
-  padding-bottom:max(32px,env(safe-area-inset-bottom))}
-@keyframes sup{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 16px}
-.sheet-card-row{display:flex;gap:12px;margin-bottom:16px;padding-bottom:16px;
-  border-bottom:1px solid var(--border)}
-.sheet-card-img{width:66px;height:92px;border-radius:8px;object-fit:cover;
-  background:var(--blue3);flex-shrink:0;box-shadow:var(--shadow)}
-.field-lbl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px}
-.cond-select{width:100%;padding:9px;border-radius:8px;border:1.5px solid var(--border);
-  font-family:inherit;font-size:13px;background:var(--surface);color:var(--text);margin-bottom:10px}
-.qty-big{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.qty-big button{width:36px;height:36px;border-radius:9px;border:1.5px solid var(--border);
-  background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.qty-big button:hover{border-color:var(--blue2)}
-.qty-big span{font-size:22px;font-weight:700;min-width:30px;text-align:center}
-.sheet-add{width:100%;padding:14px;border-radius:10px;border:none;
-  background:var(--blue2);color:#fff;font-size:15px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
-.sheet-add:active{background:var(--blue);transform:scale(.98)}
-.sheet-skip{width:100%;padding:11px;border-radius:10px;border:1px solid var(--border);
-  background:transparent;color:var(--muted);font-size:13px;cursor:pointer}
-/* ── SECTION TITLE ── */
-.stitle{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
-  letter-spacing:.06em;margin:14px 0 8px;display:flex;align-items:center;gap:6px}
-/* ── EMPTY STATE ── */
-.empty{display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:40px 20px;gap:12px;color:var(--muted)}
-.empty-icon{width:68px;height:68px;border-radius:50%;background:var(--blue3);
-  display:flex;align-items:center;justify-content:center}
+.ss{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 6px;border-radius:99px}
+.ss-ok{background:var(--green2);color:var(--green)}
+.ss-par{background:var(--orange2);color:var(--orange)}
+.ss-mis{background:var(--red2);color:var(--red)}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 16px;gap:12px;color:var(--muted)}
+.empty-icon{width:68px;height:68px;border-radius:50%;background:var(--blue3);display:flex;align-items:center;justify-content:center}
 .empty-icon i{font-size:30px;color:var(--blue2)}
 .empty h3{font-size:16px;font-weight:700;color:var(--text)}
 .empty p{font-size:13px;line-height:1.6;max-width:260px}
-/* ── TOAST ── */
-.toasts{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;gap:6px;z-index:999;pointer-events:none;
-  width:calc(100% - 32px);max-width:440px}
-.toast{background:var(--text);color:#fff;padding:10px 16px;border-radius:10px;
-  font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;
-  box-shadow:0 4px 20px rgba(0,0,0,.2);animation:tin .25s ease forwards}
+
+/* SECTION LABEL */
+.slbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+
+/* TOAST */
+.toasts{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;z-index:999;pointer-events:none;width:calc(100% - 32px);max-width:400px}
+.toast{background:var(--text);color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:7px;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:tin .25s ease forwards}
 .toast.out{animation:tout .25s ease forwards}
 .t-ok{background:var(--green)}.t-err{background:var(--red)}.t-warn{background:var(--orange)}
 @keyframes tin{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes tout{to{transform:translateY(10px);opacity:0}}
-/* ── COLLAPSIBLE ── */
-.collapsible-btn{width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);
-  border-radius:var(--radius-sm);font-size:12px;font-weight:600;color:var(--muted);
-  cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-top:8px;
-  font-family:inherit}
-.collapsible-content{display:none}
-.collapsible-content.open{display:block}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="topbar">
-    <div class="logo"><i class="ti ti-pokeball"></i></div>
+    <div class="logo"><i class="ti ti-pokeball" aria-hidden="true"></i></div>
     <div>
       <div class="app-title">Pokémon <span>Card Scanner</span></div>
-      <div id="libInfo" style="font-size:11px;color:var(--muted)">Conectando…</div>
+      <div class="topbar-sub" id="libInfo">Iniciando…</div>
     </div>
-    <div style="margin-left:auto;display:flex;gap:8px">
-      <button class="btn btn-ghost btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i></button>
-    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="openApiModal()"><i class="ti ti-key" aria-hidden="true"></i></button>
   </div>
 
-  <div class="content">
-    <!-- TABS -->
-    <div class="nav-tabs" role="tablist">
-      <button class="nav-tab active" onclick="showTab('scanner')" id="tab-scanner">
-        <i class="ti ti-scan"></i> Escáner
-      </button>
-      <button class="nav-tab" onclick="showTab('inventory')" id="tab-inventory">
-        <i class="ti ti-stack-2"></i> Inventario
-        <span class="nav-badge" id="inv-badge" style="display:none">0</span>
-      </button>
-      <button class="nav-tab" onclick="showTab('decks')" id="tab-decks">
-        <i class="ti ti-cards"></i> Mazos
-      </button>
-    </div>
-
-    <!-- ════ SCANNER TAB ════ -->
-    <div id="tab-content-scanner">
-      <div class="grid2">
-        <!-- Izquierda: Input -->
-        <div>
-          <div class="panel">
-            <div class="panel-hdr"><i class="ti ti-camera"></i> Cámara en vivo</div>
-            <div class="panel-body">
-              <div id="camPh" class="cam-ph" onclick="startCam()">
-                <i class="ti ti-camera"></i><p>Activar cámara</p><small>Haz clic para iniciar</small>
-              </div>
-              <div id="videoWrap" class="video-wrap" style="display:none">
-                <video id="video" autoplay playsinline muted></video>
-                <div class="scan-overlay">
-                  <div class="scan-frame">
-                    <div class="sf-c sf-tl"></div><div class="sf-c sf-tr"></div>
-                    <div class="sf-c sf-bl"></div><div class="sf-c sf-br"></div>
-                    <div class="sf-line"></div>
-                  </div>
-                </div>
-                <div class="cam-hint">Centra la carta en el marco amarillo</div>
-              </div>
-              <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-                <button id="captureBtn" class="btn btn-primary" onclick="capture()" disabled style="flex:1">
-                  <i class="ti ti-camera"></i> Capturar
-                </button>
-                <button id="stopBtn" class="btn btn-ghost" onclick="stopCam()" style="display:none">
-                  <i class="ti ti-x"></i>
-                </button>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--muted)">
-                <label style="position:relative;width:34px;height:19px;cursor:pointer;flex-shrink:0">
-                  <input type="checkbox" id="autoScan" style="opacity:0;width:0;height:0" onchange="toggleAuto()"/>
-                  <span id="autoSlider" style="position:absolute;inset:0;background:var(--border);border-radius:99px;transition:.2s">
-                    <span id="autoKnob" style="position:absolute;width:13px;height:13px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s"></span>
-                  </span>
-                </label>
-                Escaneo automático cada 2s
-              </div>
-              <div class="file-zone" onclick="document.getElementById('fileInput').click()"
-                   ondragover="event.preventDefault();this.style.borderColor='var(--blue2)'"
-                   ondragleave="this.style.borderColor=''"
-                   ondrop="dropFile(event)">
-                <i class="ti ti-photo-up"></i>
-                <p style="font-size:13px;font-weight:500">Arrastra o selecciona imagen</p>
-                <small style="font-size:11px">JPG · PNG · WEBP</small>
-              </div>
-              <input type="file" id="fileInput" accept="image/*" onchange="fileUpload(event)"/>
-            </div>
-          </div>
-          <!-- Debug -->
-          <div class="panel">
-            <div class="panel-hdr"><i class="ti ti-bug"></i> Debug OpenCV
-              <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:400;color:var(--muted);cursor:pointer">
-                <input type="checkbox" id="debugMode"/> Activar
-              </label>
-            </div>
-            <div class="panel-body">
-              <div id="debugWrap" style="display:none">
-                <img id="debugImg" style="width:100%;border-radius:8px;display:block" alt="debug"/>
-              </div>
-              <div id="debugEmpty" style="color:var(--muted);font-size:12px;text-align:center;padding:8px 0">
-                Activa debug y escanea para ver contornos
-              </div>
-            </div>
-          </div>
+  <!-- SCANNER -->
+  <div id="screen-scan" class="screen active">
+    <div class="panel">
+      <div class="panel-hdr"><i class="ti ti-camera" aria-hidden="true"></i> Cámara en vivo</div>
+      <div class="panel-body">
+        <div id="camPh" class="cam-ph" onclick="startCam()">
+          <i class="ti ti-camera" aria-hidden="true"></i><p>Activar cámara</p><small>Toca para empezar</small>
         </div>
-
-        <!-- Derecha: Resultado -->
-        <div>
-          <div class="panel" style="margin-bottom:16px">
-            <div class="panel-hdr"><i class="ti ti-scan"></i> Resultado</div>
-            <div class="panel-body">
-              <div id="statusBox" class="status s-idle"><i class="ti ti-info-circle"></i><span>Esperando escaneo…</span></div>
-              <div id="confWrap" class="conf-wrap" style="display:none">
-                <div class="conf-lbl"><span>Confianza detección</span><span id="confVal">0%</span></div>
-                <div class="conf-track"><div class="conf-fill" id="confFill" style="width:0%"></div></div>
-              </div>
-              <div id="resPh" class="result-ph"><i class="ti ti-cards"></i><p>La carta aparecerá aquí</p></div>
-              <div id="resWrap" style="display:none">
-                <div class="result-img-wrap">
-                  <img id="resultImg" alt="Carta detectada"/>
-                  <div class="result-badge"><i class="ti ti-scissors"></i> Recortada</div>
-                </div>
-              </div>
-              <div id="matchWrap" style="display:none"></div>
-              <div id="timingRow" style="display:none;font-size:10px;color:var(--muted);margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap"></div>
-              <div id="resActions" style="display:none">
-                <button class="btn btn-blue btn-block" onclick="openAddSheet()">
-                  <i class="ti ti-plus"></i> Agregar a inventario
-                </button>
-                <button class="btn btn-ghost btn-block btn-sm" onclick="downloadCard()">
-                  <i class="ti ti-download"></i> Descargar imagen
-                </button>
-              </div>
-            </div>
-          </div>
-          <!-- Session stats -->
-          <div class="panel">
-            <div class="panel-hdr"><i class="ti ti-chart-bar"></i> Sesión</div>
-            <div class="panel-body">
-              <div class="grid3">
-                <div class="stat-box"><div class="stat-val" id="sTotal">0</div><div class="stat-lbl">Intentos</div></div>
-                <div class="stat-box"><div class="stat-val" id="sOk">0</div><div class="stat-lbl">Identificadas</div></div>
-                <div class="stat-box"><div class="stat-val" id="sConf">—</div><div class="stat-lbl">Conf. media</div></div>
-              </div>
-            </div>
-          </div>
+        <div id="videoWrap" class="video-wrap" style="display:none">
+          <video id="video" autoplay playsinline muted></video>
+          <div class="scan-overlay"><div class="scan-frame">
+            <div class="sf-c sf-tl"></div><div class="sf-c sf-tr"></div>
+            <div class="sf-c sf-bl"></div><div class="sf-c sf-br"></div>
+            <div class="sf-line"></div>
+          </div></div>
+          <div class="cam-hint">Centra la carta en el marco amarillo</div>
         </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button id="captureBtn" class="btn btn-primary" onclick="capture()" disabled style="flex:1"><i class="ti ti-camera" aria-hidden="true"></i> Capturar</button>
+          <button id="stopBtn" class="btn btn-ghost" onclick="stopCam()" style="display:none"><i class="ti ti-x" aria-hidden="true"></i></button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--muted)">
+          <label style="position:relative;width:34px;height:19px;cursor:pointer;flex-shrink:0">
+            <input type="checkbox" id="autoScan" style="opacity:0;width:0;height:0" onchange="toggleAuto()"/>
+            <span id="asl" style="position:absolute;inset:0;background:var(--border);border-radius:99px;transition:.2s">
+              <span id="akn" style="position:absolute;width:13px;height:13px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s"></span>
+            </span>
+          </label> Escaneo automático cada 2s
+        </div>
+        <div class="file-zone" onclick="document.getElementById('fileIn').click()"
+             ondragover="event.preventDefault();this.style.borderColor='var(--blue2)'"
+             ondragleave="this.style.borderColor=''"
+             ondrop="dropFile(event)">
+          <i class="ti ti-photo-up" aria-hidden="true"></i>
+          <p style="font-size:13px;font-weight:500">Subir imagen de carta</p>
+          <small style="font-size:11px">JPG · PNG · WEBP</small>
+        </div>
+        <input type="file" id="fileIn" accept="image/*" onchange="fileUpload(event)"/>
       </div>
     </div>
 
-    <!-- ════ INVENTORY TAB ════ -->
-    <div id="tab-content-inventory" style="display:none">
-      <div id="invSummary"></div>
-      <div class="panel">
-        <div class="panel-hdr">
-          <i class="ti ti-stack-2"></i> Colección física
-          <div style="margin-left:auto;display:flex;gap:8px">
-            <select id="sortSelect" onchange="renderInventory()" class="cond-select" style="margin:0;width:auto;padding:4px 8px;font-size:11px">
-              <option value="name">A-Z</option>
-              <option value="qty">Cantidad ↓</option>
-              <option value="value">Valor ↓</option>
-              <option value="recent">Reciente</option>
-            </select>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="inv-search"><i class="ti ti-search"></i>
-            <input type="text" placeholder="Buscar en mi colección…" id="invSearch" oninput="renderInventory()"/>
-          </div>
-          <div id="invList"></div>
+    <div class="panel">
+      <div class="panel-hdr"><i class="ti ti-scan" aria-hidden="true"></i> Resultado</div>
+      <div class="panel-body">
+        <div id="statusBox" class="status s-idle"><i class="ti ti-info-circle" aria-hidden="true"></i><span>Esperando escaneo…</span></div>
+        <div id="resPh" class="res-ph"><i class="ti ti-cards" aria-hidden="true"></i><p style="font-size:13px">La carta aparecerá aquí</p></div>
+        <img id="resultImg" style="display:none" alt="Carta capturada"/>
+        <div id="matchWrap" style="display:none"></div>
+        <div id="resActions" style="display:none">
+          <button class="btn btn-blue btn-block" onclick="openAddSheet()"><i class="ti ti-plus" aria-hidden="true"></i> Agregar a inventario</button>
+          <button class="btn btn-ghost btn-block btn-sm" onclick="downloadCard()"><i class="ti ti-download" aria-hidden="true"></i> Descargar imagen</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- ════ DECKS TAB ════ -->
-    <div id="tab-content-decks" style="display:none">
-      <div id="deckSummaryBox" style="margin-bottom:16px"></div>
-      <div id="deckList"></div>
+  <!-- INVENTORY -->
+  <div id="screen-inventory" class="screen">
+    <div id="invSummary"></div>
+    <div class="panel">
+      <div class="panel-hdr"><i class="ti ti-stack-2" aria-hidden="true"></i> Colección física
+        <select id="sortSel" onchange="renderInv()" style="margin-left:auto;padding:4px 8px;border-radius:6px;border:1px solid var(--border);font-size:11px;background:var(--bg);font-family:inherit">
+          <option value="name">A-Z</option><option value="qty">Cantidad</option><option value="val">Valor</option>
+        </select>
+      </div>
+      <div class="panel-body">
+        <div class="inv-search"><i class="ti ti-search" aria-hidden="true"></i>
+          <input type="text" id="invQ" placeholder="Buscar en mi colección…" oninput="renderInv()"/>
+        </div>
+        <div id="invList"></div>
+      </div>
     </div>
   </div>
+
+  <!-- DECKS -->
+  <div id="screen-decks" class="screen">
+    <div id="deckSummary" style="margin-bottom:14px"></div>
+    <div id="deckList"></div>
+  </div>
+
+  <nav class="bnav" role="navigation">
+    <button class="bnav-item" onclick="showTab('scan')" id="nav-scan"><i class="ti ti-camera" aria-hidden="true"></i><span>Escanear</span></button>
+    <button class="bnav-item" onclick="showTab('inventory')" id="nav-inventory"><i class="ti ti-stack-2" aria-hidden="true"></i><span>Colección</span><span class="bnav-badge" id="invBadge" style="display:none">0</span></button>
+    <button class="bnav-item" onclick="showTab('decks')" id="nav-decks"><i class="ti ti-trophy" aria-hidden="true"></i><span>Mazos</span></button>
+  </nav>
 </div>
 
-<!-- ADD TO INVENTORY SHEET -->
+<!-- ADD SHEET -->
 <div class="sheet-back" id="sheetBack" onclick="closeSheet()">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
@@ -471,130 +330,127 @@ html,body{background:var(--bg);color:var(--text);font-family:-apple-system,Blink
   </div>
 </div>
 
+<!-- API KEY MODAL -->
+<div class="modal-back" id="apiModal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-icon"><i class="ti ti-key" aria-hidden="true"></i></div>
+    <div class="modal-title">API Key de Anthropic</div>
+    <div class="modal-desc">El escáner usa Claude Vision para identificar cartas. Necesitas una API Key de Anthropic.</div>
+    <a class="modal-link" href="https://console.anthropic.com/settings/keys" target="_blank"><i class="ti ti-external-link" aria-hidden="true"></i> Obtener API Key en console.anthropic.com</a>
+    <input class="modal-input" id="apiKeyIn" type="password" placeholder="sk-ant-api03-…"/>
+    <div class="modal-hint">🔒 Tu key se guarda solo en este dispositivo (localStorage). No se envía a ningún servidor propio.</div>
+    <button class="modal-save" onclick="saveApiKey()"><i class="ti ti-check" aria-hidden="true"></i> Guardar y continuar</button>
+    <button class="modal-skip" onclick="skipApiKey()">Usar solo búsqueda manual</button>
+  </div>
+</div>
+
 <canvas id="cap" style="display:none"></canvas>
 <div class="toasts" id="toasts"></div>
 
 <script>
-// ══════════════════════════
-//  CONFIG
-// ══════════════════════════
-const API = '';  // mismo origen. En dev: 'http://localhost:8000'
+const TCGAPI='https://api.pokemontcg.io/v2';
+const CLAUDE='https://api.anthropic.com/v1/messages';
+let apiKey=localStorage.getItem('pk_apikey')||'';
+let col=JSON.parse(localStorage.getItem('pk_col_v4')||'{}');
+let camStream=null,autoInt=null,scanning=false;
+let lastCard=null,lastImg=null,sheetQty=1;
 
-let camStream=null, autoInt=null, scanning=false;
-let lastCard=null, lastCardImg=null;
-let inventory={};
-let stats={total:0,ok:0,conf:0};
+const META=[
+  {id:'charizard_ex',name:'Charizard ex',tier:'S',format:'Standard',style:'Aggro-Control',
+   description:'El mazo más dominante del formato. Pidgeot ex provee búsqueda ilimitada; Charizard ex cierra con Burning Darkness.',
+   pokemon_count:18,trainer_count:30,energy_count:12,
+   slots:[
+    {name:'Charizard ex',role:'main_attacker',qty:4,ids:['sv3-125'],price:12.50,energy:false},
+    {name:'Pidgeot ex',role:'engine',qty:3,ids:['sv3-164'],price:4.20,energy:false},
+    {name:'Charmander',role:'evolution',qty:4,ids:['sv3-46'],price:0.30,energy:false},
+    {name:'Charmeleon',role:'evolution',qty:2,ids:['sv3-48'],price:0.40,energy:false},
+    {name:'Pidgey',role:'evolution',qty:4,ids:['sv3-162'],price:0.10,energy:false},
+    {name:'Pidgeotto',role:'evolution',qty:1,ids:['sv3-163'],price:0.15,energy:false},
+    {name:"Professor's Research",role:'supporter',qty:4,ids:['swsh45-62'],price:0.50,energy:false},
+    {name:'Ultra Ball',role:'item',qty:4,ids:['sv1-196'],price:0.80,energy:false},
+    {name:'Rare Candy',role:'item',qty:4,ids:['sv1-191'],price:1.20,energy:false},
+    {name:'Iono',role:'supporter',qty:3,ids:['sv2-185'],price:2.50,energy:false},
+    {name:'Arven',role:'supporter',qty:4,ids:['sv1-186'],price:1.20,energy:false},
+    {name:'Nest Ball',role:'item',qty:4,ids:['sv1-181'],price:0.30,energy:false},
+    {name:'Magma Basin',role:'stadium',qty:3,ids:['swsh11-144'],price:0.80,energy:false},
+    {name:'Fire Energy',role:'energy',qty:12,ids:['sv1-267'],price:0.10,energy:true},
+  ]},
+  {id:'gardevoir_ex',name:'Gardevoir ex',tier:'S',format:'Standard',style:'Combo',
+   description:'Aceleración de Energías Psíquicas con Gardevoir ex. Comfey genera ventaja desde la Lost Zone.',
+   pokemon_count:16,trainer_count:32,energy_count:12,
+   slots:[
+    {name:'Gardevoir ex',role:'main_attacker',qty:3,ids:['sv2-86'],price:18.00,energy:false},
+    {name:'Ralts',role:'evolution',qty:4,ids:['sv2-81'],price:0.80,energy:false},
+    {name:'Kirlia',role:'evolution',qty:4,ids:['sv2-82'],price:2.50,energy:false},
+    {name:'Comfey',role:'engine',qty:4,ids:['swsh12-79'],price:5.00,energy:false},
+    {name:'Zacian V',role:'tech',qty:2,ids:['swsh4-138'],price:3.00,energy:false},
+    {name:'Iono',role:'supporter',qty:4,ids:['sv2-185'],price:2.50,energy:false},
+    {name:'Arven',role:'supporter',qty:3,ids:['sv1-186'],price:1.20,energy:false},
+    {name:'Ultra Ball',role:'item',qty:4,ids:['sv1-196'],price:0.80,energy:false},
+    {name:'Rare Candy',role:'item',qty:3,ids:['sv1-191'],price:1.20,energy:false},
+    {name:'Mirage Gate',role:'item',qty:4,ids:['swsh12-163'],price:2.00,energy:false},
+    {name:'Psychic Energy',role:'energy',qty:12,ids:['sv1-270'],price:0.10,energy:true},
+  ]},
+  {id:'miraidon_ex',name:'Miraidon ex',tier:'A',format:'Standard',style:'Aggro',
+   description:'Mazo eléctrico agresivo. Miraidon ex llena el banco; Flaaffy acelera energía desde el banco con Dynamotor.',
+   pokemon_count:14,trainer_count:34,energy_count:12,
+   slots:[
+    {name:'Miraidon ex',role:'main_attacker',qty:4,ids:['sv1-81'],price:8.00,energy:false},
+    {name:'Flaaffy',role:'engine',qty:4,ids:['swsh7-55'],price:1.50,energy:false},
+    {name:'Mareep',role:'evolution',qty:4,ids:['swsh7-54'],price:0.30,energy:false},
+    {name:'Raichu V',role:'tech',qty:1,ids:['swsh9-45'],price:2.00,energy:false},
+    {name:"Professor's Research",role:'supporter',qty:4,ids:['swsh45-62'],price:0.50,energy:false},
+    {name:'Iono',role:'supporter',qty:3,ids:['sv2-185'],price:2.50,energy:false},
+    {name:'Ultra Ball',role:'item',qty:4,ids:['sv1-196'],price:0.80,energy:false},
+    {name:'Electric Generator',role:'item',qty:4,ids:['sv1-170'],price:0.60,energy:false},
+    {name:'Nest Ball',role:'item',qty:4,ids:['sv1-181'],price:0.30,energy:false},
+    {name:'Switch',role:'item',qty:3,ids:['sv1-194'],price:0.30,energy:false},
+    {name:'Lightning Energy',role:'energy',qty:11,ids:['sv1-271'],price:0.10,energy:true},
+  ]},
+  {id:'lost_zone',name:'Lost Zone Box',tier:'A',format:'Standard',style:'Control-Aggro',
+   description:'Comfey alimenta la Lost Zone. Cramorant ataca sin energía; Radiant Charizard cierra con daño masivo.',
+   pokemon_count:12,trainer_count:36,energy_count:12,
+   slots:[
+    {name:'Comfey',role:'engine',qty:4,ids:['swsh12-79'],price:5.00,energy:false},
+    {name:'Cramorant',role:'attacker',qty:4,ids:['swsh12-50'],price:0.50,energy:false},
+    {name:'Sableye',role:'attacker',qty:2,ids:['swsh12-70'],price:2.50,energy:false},
+    {name:'Radiant Charizard',role:'attacker',qty:1,ids:['swsh11-20'],price:15.00,energy:false},
+    {name:"Professor's Research",role:'supporter',qty:4,ids:['swsh45-62'],price:0.50,energy:false},
+    {name:"Colress's Experiment",role:'item',qty:4,ids:['swsh12-155'],price:1.80,energy:false},
+    {name:'Mirage Gate',role:'item',qty:4,ids:['swsh12-163'],price:2.00,energy:false},
+    {name:'Lost Vacuum',role:'item',qty:4,ids:['swsh12-162'],price:0.80,energy:false},
+    {name:'Fire Energy',role:'energy',qty:4,ids:['sv1-267'],price:0.10,energy:true},
+    {name:'Water Energy',role:'energy',qty:4,ids:['sv1-264'],price:0.10,energy:true},
+    {name:'Psychic Energy',role:'energy',qty:2,ids:['sv1-270'],price:0.10,energy:true},
+    {name:'Darkness Energy',role:'energy',qty:2,ids:['sv1-268'],price:0.10,energy:true},
+  ]},
+  {id:'roaring_moon',name:'Roaring Moon ex',tier:'A',format:'Standard',style:'Aggro',
+   description:'Mazo oscuro ultra agresivo. Dark Patch acelera energía; Roaring Moon ex hace KOs con una sola energía.',
+   pokemon_count:10,trainer_count:38,energy_count:12,
+   slots:[
+    {name:'Roaring Moon ex',role:'main_attacker',qty:4,ids:['sv4-228'],price:10.00,energy:false},
+    {name:'Squawkabilly ex',role:'tech',qty:2,ids:['sv2-169'],price:3.50,energy:false},
+    {name:'Galarian Moltres V',role:'tech',qty:2,ids:['swsh6-97'],price:2.50,energy:false},
+    {name:"Professor's Research",role:'supporter',qty:4,ids:['swsh45-62'],price:0.50,energy:false},
+    {name:'Iono',role:'supporter',qty:3,ids:['sv2-185'],price:2.50,energy:false},
+    {name:'Boss\'s Orders',role:'supporter',qty:3,ids:['sv5-183'],price:1.50,energy:false},
+    {name:'Ultra Ball',role:'item',qty:4,ids:['sv1-196'],price:0.80,energy:false},
+    {name:'Dark Patch',role:'item',qty:4,ids:['swsh9-139'],price:0.80,energy:false},
+    {name:'Nest Ball',role:'item',qty:4,ids:['sv1-181'],price:0.30,energy:false},
+    {name:'Darkness Energy',role:'energy',qty:12,ids:['sv1-268'],price:0.10,energy:true},
+  ]},
+];
 
-// ══════════════════════════
-//  TABS
-// ══════════════════════════
-function showTab(name){
-  ['scanner','inventory','decks'].forEach(t=>{
-    document.getElementById('tab-content-'+t).style.display = t===name?'block':'none';
-    document.getElementById('tab-'+t).classList.toggle('active', t===name);
-  });
-  if(name==='inventory') loadInventory();
-  if(name==='decks')     loadDecks();
-}
-
-// ══════════════════════════
-//  TOAST
-// ══════════════════════════
+// ── UTILS ──
+function save(){localStorage.setItem('pk_col_v4',JSON.stringify(col));updateBadge()}
+function updateBadge(){const n=Object.keys(col).length;const b=document.getElementById('invBadge');b.textContent=n;b.style.display=n>0?'block':'none'}
 function toast(msg,type=''){
-  const w=document.getElementById('toasts');
-  const d=document.createElement('div');
-  const ic=type==='ok'?'ti-circle-check':type==='err'?'ti-alert-circle':type==='warn'?'ti-alert-triangle':'ti-info-circle';
+  const w=document.getElementById('toasts');const d=document.createElement('div');
+  const ic=type==='ok'?'ti-circle-check':type==='err'?'ti-alert-circle':'ti-info-circle';
   d.className='toast'+(type?' t-'+type:'');
-  d.innerHTML=`<i class="ti ${ic}"></i>${msg}`;
-  w.appendChild(d);
+  d.innerHTML=`<i class="ti ${ic}"></i>${msg}`;w.appendChild(d);
   setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),300)},3000);
 }
-
-// ══════════════════════════
-//  CAMERA
-// ══════════════════════════
-async function startCam(){
-  try{
-    camStream=await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:{ideal:'environment'},width:{ideal:1280}}
-    });
-    document.getElementById('video').srcObject=camStream;
-    document.getElementById('camPh').style.display='none';
-    document.getElementById('videoWrap').style.display='block';
-    document.getElementById('captureBtn').disabled=false;
-    document.getElementById('stopBtn').style.display='inline-flex';
-    setStatus('idle','Cámara activa. Apunta la carta al marco.');
-  }catch(e){ setStatus('err','No se pudo acceder a la cámara: '+e.message); }
-}
-function stopCam(){
-  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
-  document.getElementById('camPh').style.display='flex';
-  document.getElementById('videoWrap').style.display='none';
-  document.getElementById('captureBtn').disabled=true;
-  document.getElementById('stopBtn').style.display='none';
-  document.getElementById('autoScan').checked=false;
-  toggleAuto();
-}
-function toggleAuto(){
-  const on=document.getElementById('autoScan').checked;
-  const sl=document.getElementById('autoSlider');
-  const kn=document.getElementById('autoKnob');
-  sl.style.background=on?'var(--blue2)':'var(--border)';
-  kn.style.transform=on?'translateX(15px)':'translateX(0)';
-  if(on){ autoInt=setInterval(()=>{if(!scanning)capture();},2000); }
-  else { clearInterval(autoInt); autoInt=null; }
-}
-function capture(){
-  const v=document.getElementById('video');
-  if(!v.srcObject){setStatus('err','Activa la cámara primero.');return;}
-  const c=document.getElementById('cap');
-  c.width=v.videoWidth||640; c.height=v.videoHeight||480;
-  c.getContext('2d').drawImage(v,0,0);
-  sendFrame(c.toDataURL('image/jpeg',.87).split(',')[1]);
-}
-function fileUpload(e){ const f=e.target.files[0]; if(!f)return; toB64(f).then(sendFrame); e.target.value=''; }
-function dropFile(e){
-  e.preventDefault(); e.currentTarget.style.borderColor='';
-  const f=e.dataTransfer.files[0];
-  if(f&&f.type.startsWith('image/')) toB64(f).then(sendFrame);
-}
-function toB64(file){ return new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.readAsDataURL(file);}); }
-
-// ══════════════════════════
-//  SCAN API
-// ══════════════════════════
-async function sendFrame(b64){
-  if(scanning)return;
-  scanning=true; stats.total++;
-  setStatus('scan','Detectando contorno y aplicando warpPerspective…');
-  try{
-    const res=await fetch(API+'/api/scan',{method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({image:b64,debug:document.getElementById('debugMode').checked,top_n:3})});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const d=await res.json();
-    if(d.card_image){
-      document.getElementById('resPh').style.display='none';
-      document.getElementById('resWrap').style.display='block';
-      document.getElementById('resultImg').src='data:image/jpeg;base64,'+d.card_image;
-      lastCardImg=d.card_image;
-    }
-    showConf(d.detection_conf||0);
-    if(d.best_match&&d.best_match.name){
-      showMatch(d.best_match, d.matches||[]);
-      lastCard=d.best_match;
-      document.getElementById('resActions').style.display='block';
-      stats.ok++; stats.conf+=d.best_match.confidence||0;
-    }
-    showTimings(d.time_ms||{});
-    if(d.debug_image){ document.getElementById('debugImg').src='data:image/jpeg;base64,'+d.debug_image; document.getElementById('debugWrap').style.display='block'; document.getElementById('debugEmpty').style.display='none'; }
-    setStatus(d.success?'ok':d.card_image?'idle':'err', d.message);
-    if(d.success) toast(d.message.split('|')[0].trim(),'ok');
-    updateSessionStats();
-  }catch(e){ setStatus('err','Error: '+e.message); }
-  finally{ scanning=false; }
-}
-
 function setStatus(type,msg){
   const el=document.getElementById('statusBox');
   const ic={idle:'ti-info-circle',scan:'ti-loader',ok:'ti-circle-check',err:'ti-alert-circle'}[type];
@@ -602,322 +458,344 @@ function setStatus(type,msg){
   el.className='status '+cl;
   el.innerHTML=`<i class="ti ${ic}${type==='scan'?' spin':''}"></i><span>${msg}</span>`;
 }
-function showConf(v){
-  const pct=Math.round(v*100);
-  const col=v>=.7?'var(--green)':v>=.4?'var(--orange)':'var(--red)';
-  document.getElementById('confWrap').style.display='block';
-  document.getElementById('confVal').textContent=pct+'%';
-  document.getElementById('confFill').style.cssText=`width:${pct}%;background:${col}`;
+function getPrice(card){
+  const p=card.tcgplayer?.prices;if(!p)return null;
+  return p.holofoil?.market||p.normal?.market||p.reverseHolofoil?.market||null;
 }
-function showMatch(best, all){
-  const src=best.source==='local_phash'?
-    `<span class="tag tag-local"><i class="ti ti-database" style="font-size:9px"></i> Local</span>`:
-    `<span class="tag tag-api"><i class="ti ti-cloud" style="font-size:9px"></i> API</span>`;
-  const inv=best.in_inventory?
-    `<div class="inv-indicator inv-has"><i class="ti ti-circle-check"></i> En inventario — ${best.inventory_qty} cop.</div>`:
-    `<div class="inv-indicator inv-none"><i class="ti ti-x"></i> No está en tu inventario</div>`;
-  const hPct=Math.max(0,Math.round((1-best.hamming/64)*100));
-  const hCol=best.hamming<=5?'var(--green)':best.hamming<=12?'var(--orange)':'var(--red)';
-  const alts=all.slice(1,4);
-  const altHtml=alts.length?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:600">Otras posibilidades</div>
-    ${alts.map(m=>`<div style="font-size:11px;display:flex;justify-content:space-between;padding:2px 0">
-      <span style="color:var(--muted)">${m.name} — ${m.set_name}</span>
-      <strong>${Math.round(m.confidence*100)}%</strong></div>`).join('')}</div>`:'';
-  document.getElementById('matchWrap').style.display='block';
-  document.getElementById('matchWrap').innerHTML=`<div class="match-card" style="margin-bottom:10px">
-    ${best.img_small?`<img class="match-thumb" src="${best.img_small}" alt="${best.name}"/>`
-      :`<div class="match-thumb" style="display:flex;align-items:center;justify-content:center;color:#9E9E9E"><i class="ti ti-cards" style="font-size:22px"></i></div>`}
-    <div class="match-info">
-      <div class="match-name">${best.name}</div>
-      <div class="match-sub">${best.set_name} · #${best.number}</div>
-      <div class="tags">${src}${best.rarity?`<span class="tag tag-rare">${best.rarity}</span>`:''}
-        ${(best.types||[]).map(t=>`<span class="tag tag-type">${t}</span>`).join('')}</div>
-      ${best.price_usd?`<div class="match-price">$${best.price_usd.toFixed(2)} <span style="font-size:11px;font-weight:400;color:var(--muted)">USD</span></div>`:''}
-      <div class="match-conf">${Math.round(best.confidence*100)}% confianza · Hamming ${best.hamming}/64</div>
-      <div class="ham-bar"><div class="ham-fill" style="width:${hPct}%;background:${hCol}"></div></div>
-      ${inv}${altHtml}
-    </div></div>`;
-}
-function showTimings(T){
-  const el=document.getElementById('timingRow');
-  const entries=Object.entries(T);
-  if(!entries.length){el.style.display='none';return;}
-  el.style.display='flex';
-  el.innerHTML=entries.map(([k,v])=>
-    `<span style="background:var(--bg);padding:2px 7px;border-radius:99px;border:1px solid var(--border)">
-      ${k.replace('_ms','').replace(/_/g,' ')}: <strong>${v}ms</strong></span>`).join('');
-}
-function updateSessionStats(){
-  document.getElementById('sTotal').textContent=stats.total;
-  document.getElementById('sOk').textContent=stats.ok;
-  document.getElementById('sConf').textContent=stats.ok>0?Math.round(stats.conf/stats.ok*100)+'%':'—';
-}
-function downloadCard(){
-  if(!lastCardImg)return;
-  const a=document.createElement('a');
-  a.href='data:image/jpeg;base64,'+lastCardImg;
-  a.download=`carta-${lastCard?.name||'pokemon'}-${Date.now()}.jpg`;
-  a.click(); toast('Imagen descargada','ok');
+function showTab(tab){
+  ['scan','inventory','decks'].forEach(t=>{
+    document.getElementById('screen-'+t).classList.toggle('active',t===tab);
+    document.getElementById('nav-'+t).classList.toggle('active',t===tab);
+  });
+  if(tab==='inventory')renderInv();
+  if(tab==='decks')renderDecks();
 }
 
-// ══════════════════════════
-//  ADD TO INVENTORY SHEET
-// ══════════════════════════
-let sheetQty=1;
+// ── API KEY ──
+function init(){
+  updateBadge();
+  if(!apiKey){document.getElementById('apiModal').classList.remove('hidden');}
+  else{document.getElementById('apiModal').classList.add('hidden');document.getElementById('libInfo').textContent='Claude Vision activo ✓';}
+}
+function openApiModal(){document.getElementById('apiModal').classList.remove('hidden');document.getElementById('apiKeyIn').value=apiKey||'';}
+function saveApiKey(){
+  const k=document.getElementById('apiKeyIn').value.trim();
+  if(!k.startsWith('sk-ant')){toast('Esa no parece una API Key válida','err');return;}
+  apiKey=k;localStorage.setItem('pk_apikey',apiKey);
+  document.getElementById('apiModal').classList.add('hidden');
+  document.getElementById('libInfo').textContent='Claude Vision activo ✓';
+  toast('API Key guardada ✓','ok');
+}
+function skipApiKey(){document.getElementById('apiModal').classList.add('hidden');document.getElementById('libInfo').textContent='Modo manual (sin IA)';}
+
+// ── CAMERA ──
+async function startCam(){
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}}});
+    document.getElementById('video').srcObject=camStream;
+    document.getElementById('camPh').style.display='none';
+    document.getElementById('videoWrap').style.display='block';
+    document.getElementById('captureBtn').disabled=false;
+    document.getElementById('stopBtn').style.display='inline-flex';
+    setStatus('idle','Cámara activa. Apunta la carta al marco.');
+  }catch(e){setStatus('err','No se pudo acceder a la cámara: '+e.message);}
+}
+function stopCam(){
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+  document.getElementById('camPh').style.display='flex';
+  document.getElementById('videoWrap').style.display='none';
+  document.getElementById('captureBtn').disabled=true;
+  document.getElementById('stopBtn').style.display='none';
+  document.getElementById('autoScan').checked=false;toggleAuto();
+}
+function toggleAuto(){
+  const on=document.getElementById('autoScan').checked;
+  document.getElementById('asl').style.background=on?'var(--blue2)':'var(--border)';
+  document.getElementById('akn').style.transform=on?'translateX(15px)':'translateX(0)';
+  if(on){autoInt=setInterval(()=>{if(!scanning)capture();},2000);}
+  else{clearInterval(autoInt);autoInt=null;}
+}
+function capture(){
+  const v=document.getElementById('video');if(!v.srcObject){setStatus('err','Activa la cámara primero.');return;}
+  const c=document.getElementById('cap');c.width=v.videoWidth||640;c.height=v.videoHeight||480;
+  c.getContext('2d').drawImage(v,0,0);
+  const b64=c.toDataURL('image/jpeg',.87).split(',')[1];
+  lastImg=b64;scanWithAI(b64);
+}
+function fileUpload(e){const f=e.target.files[0];if(!f)return;toB64(f).then(b64=>{lastImg=b64;scanWithAI(b64);});e.target.value='';}
+function dropFile(e){
+  e.preventDefault();e.currentTarget.style.borderColor='';
+  const f=e.dataTransfer.files[0];
+  if(f&&f.type.startsWith('image/'))toB64(f).then(b64=>{lastImg=b64;scanWithAI(b64);});
+}
+function toB64(file){return new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.readAsDataURL(file);});}
+
+// ── CLAUDE VISION ──
+async function scanWithAI(b64){
+  if(scanning)return;scanning=true;
+  setStatus('scan','Identificando carta con Claude Vision…');
+  document.getElementById('resPh').style.display='flex';
+  document.getElementById('resultImg').style.display='none';
+  document.getElementById('matchWrap').style.display='none';
+  document.getElementById('resActions').style.display='none';
+
+  // Mostrar preview de la imagen capturada
+  document.getElementById('resPh').style.display='none';
+  document.getElementById('resultImg').src='data:image/jpeg;base64,'+b64;
+  document.getElementById('resultImg').style.display='block';
+
+  if(!apiKey){
+    setStatus('err','Sin API Key. Toca la llave 🔑 arriba para configurarla.');
+    scanning=false;return;
+  }
+  try{
+    const res=await fetch(CLAUDE,{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,
+        'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
+          {type:'text',text:`Identify the Pokémon TCG card in this image.
+Return ONLY a JSON array: [{"name":"exact card name","set_code":"sv3","number":"125"}]
+If no Pokémon card visible: []
+Return ONLY the JSON, no explanation.`}
+        ]}]})});
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(res.status===401){setStatus('err','API Key inválida. Toca 🔑 para actualizarla.');scanning=false;return;}
+      if(res.status===529||res.status===503){setStatus('err','Claude está ocupado. Intenta en unos segundos.');scanning=false;return;}
+      throw new Error(err.error?.message||'Error '+res.status);
+    }
+    const data=await res.json();
+    const text=data.content?.[0]?.text||'[]';
+    let cards=[];
+    try{cards=JSON.parse(text.replace(/```json|```/g,'').trim());}catch{}
+    if(!cards.length){setStatus('err','No detecté ninguna carta. Acércate más y asegúrate de buena iluminación.');scanning=false;return;}
+    setStatus('scan',`Encontré "${cards[0].name}" — buscando en la base de datos…`);
+    await fetchCard(cards[0]);
+  }catch(e){setStatus('err','Error al analizar: '+e.message);}
+  finally{scanning=false;}
+}
+
+async function fetchCard(detected){
+  try{
+    const q=detected.set_code?`name:"${detected.name}" set.id:${detected.set_code}`:`name:"${detected.name}"`;
+    const res=await fetch(`${TCGAPI}/cards?q=${encodeURIComponent(q)}&pageSize=3&orderBy=-set.releaseDate`);
+    const data=await res.json();const card=data.data?.[0];
+    if(!card){setStatus('err',`"${detected.name}" no está en la base de datos. Prueba búsqueda manual.`);return;}
+    lastCard={card_id:card.id,name:card.name,set_name:card.set?.name||'',set_id:card.set?.id||'',
+      number:card.number||'',rarity:card.rarity||'',types:card.types||[],
+      price_usd:getPrice(card),img_small:card.images?.small||''};
+    showMatch(lastCard);
+    const inv=col[card.id];
+    const invNote=inv?` | 📦 ${inv.quantity} cop. en colección`:' | ➕ No está en tu colección';
+    setStatus('ok',`${card.name} — ${card.set?.name} #${card.number}${invNote}`);
+    document.getElementById('resActions').style.display='block';
+    toast(`${card.name} identificada`,'ok');
+  }catch(e){setStatus('err','Error al buscar: '+e.message);}
+}
+
+function showMatch(c){
+  const inv=col[c.card_id];
+  const invHtml=inv
+    ?`<div class="inv-ind inv-has"><i class="ti ti-circle-check"></i> En colección — ${inv.quantity} copia${inv.quantity>1?'s':''}</div>`
+    :`<div class="inv-ind inv-none"><i class="ti ti-x"></i> No está en tu colección</div>`;
+  document.getElementById('matchWrap').style.display='block';
+  document.getElementById('matchWrap').innerHTML=`<div class="match-card">
+    ${c.img_small?`<img class="match-thumb" src="${c.img_small}" alt="${c.name}"/>`
+      :`<div class="match-thumb" style="display:flex;align-items:center;justify-content:center;color:#9E9E9E"><i class="ti ti-cards" style="font-size:22px"></i></div>`}
+    <div style="flex:1;min-width:0">
+      <div class="match-name">${c.name}</div>
+      <div class="match-sub">${c.set_name} · #${c.number}</div>
+      <div class="tags">
+        <span class="tag tag-ai"><i class="ti ti-brain" style="font-size:9px"></i> Claude Vision</span>
+        ${c.rarity?`<span class="tag tag-rare">${c.rarity}</span>`:''}
+        ${(c.types||[]).map(t=>`<span class="tag tag-type">${t}</span>`).join('')}
+      </div>
+      ${c.price_usd?`<div class="match-price">$${c.price_usd.toFixed(2)} USD</div>`:''}
+      ${invHtml}
+    </div></div>`;
+}
+
+function downloadCard(){
+  if(!lastImg)return;
+  const a=document.createElement('a');a.href='data:image/jpeg;base64,'+lastImg;
+  a.download=`carta-${lastCard?.name||'pokemon'}-${Date.now()}.jpg`;a.click();
+  toast('Imagen descargada','ok');
+}
+
+// ── ADD TO INVENTORY ──
 function openAddSheet(){
   if(!lastCard){toast('Escanea una carta primero','err');return;}
-  sheetQty=1;
-  const c=lastCard;
+  sheetQty=1;const c=lastCard;const inv=col[c.card_id];
   document.getElementById('sheetContent').innerHTML=`
     <div class="sheet-card-row">
-      ${c.img_small?`<img class="sheet-card-img" src="${c.img_small}" alt="${c.name}"/>`
-        :`<div class="sheet-card-img" style="display:flex;align-items:center;justify-content:center;color:#9E9E9E"><i class="ti ti-cards" style="font-size:28px"></i></div>`}
+      ${c.img_small?`<img class="sheet-thumb" src="${c.img_small}" alt="${c.name}"/>`
+        :`<div class="sheet-thumb" style="display:flex;align-items:center;justify-content:center;color:#9E9E9E"><i class="ti ti-cards" style="font-size:28px"></i></div>`}
       <div style="flex:1">
-        <div style="font-size:18px;font-weight:700;margin-bottom:3px">${c.name}</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">${c.set_name} · #${c.number}</div>
-        ${c.price_usd?`<div style="font-size:14px;font-weight:700;color:var(--orange)">$${c.price_usd.toFixed(2)} USD por carta</div>`:''}
-        ${c.in_inventory?`<div class="inv-indicator inv-has" style="margin-top:8px"><i class="ti ti-circle-check"></i> Ya tienes ${c.inventory_qty} cop. — se sumará</div>`:''}
+        <div class="sheet-name">${c.name}</div>
+        <div class="sheet-sub">${c.set_name} · #${c.number}</div>
+        ${c.price_usd?`<div class="price-pill"><i class="ti ti-tag"></i>$${c.price_usd.toFixed(2)} USD</div>`:''}
+        ${inv?`<div class="inv-ind inv-has" style="margin-top:8px"><i class="ti ti-circle-check"></i> Ya tienes ${inv.quantity} cop. — se sumará</div>`:''}
       </div>
     </div>
     <div class="field-lbl">Cantidad a agregar</div>
     <div class="qty-big">
-      <button onclick="sheetQtyAdj(-1)">−</button>
-      <span id="sheetQtyDisplay">1</span>
-      <button onclick="sheetQtyAdj(1)">+</button>
+      <button onclick="adjSheetQty(-1)">−</button>
+      <span id="sqd">1</span>
+      <button onclick="adjSheetQty(1)">+</button>
     </div>
     <div class="field-lbl">Condición</div>
-    <select class="cond-select" id="sheetCond">
-      <option value="NM">NM — Near Mint (sin marcas)</option>
-      <option value="LP">LP — Lightly Played (marcas leves)</option>
+    <select class="cond-sel" id="sheetCond">
+      <option value="NM">NM — Near Mint</option>
+      <option value="LP">LP — Lightly Played</option>
       <option value="MP">MP — Moderately Played</option>
       <option value="HP">HP — Heavily Played</option>
       <option value="D">D — Damaged</option>
     </select>
-    <button class="sheet-add" onclick="confirmAdd()">
-      <i class="ti ti-plus"></i> Agregar al inventario
-    </button>
+    <button class="sheet-add" id="sheetAddBtn" onclick="confirmAdd()"><i class="ti ti-plus"></i> Agregar a mi colección</button>
     <button class="sheet-skip" onclick="closeSheet()">Cancelar</button>`;
   document.getElementById('sheetBack').classList.add('open');
 }
-function sheetQtyAdj(d){ sheetQty=Math.max(1,sheetQty+d); document.getElementById('sheetQtyDisplay').textContent=sheetQty; }
-function closeSheet(){ document.getElementById('sheetBack').classList.remove('open'); }
-async function confirmAdd(){
+function adjSheetQty(d){sheetQty=Math.max(1,sheetQty+d);document.getElementById('sqd').textContent=sheetQty;}
+function closeSheet(){document.getElementById('sheetBack').classList.remove('open');}
+function confirmAdd(){
   if(!lastCard)return;
-  const cond=document.getElementById('sheetCond').value;
-  const qty=sheetQty;
-  try{
-    const res=await fetch(API+'/api/inventory',{method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({...lastCard, quantity:qty, condition:cond})});
-    const d=await res.json();
-    closeSheet();
-    toast(d.message,'ok');
-    loadInventory();
-    // Actualizar estado de inventario en el match
-    if(lastCard) lastCard.in_inventory=true;
-    lastCard.inventory_qty=(lastCard.inventory_qty||0)+qty;
-    if(lastCard) showMatch(lastCard,[]);
-  }catch(e){ toast('Error al agregar: '+e.message,'err'); }
+  const c=lastCard;const cond=document.getElementById('sheetCond').value;
+  if(col[c.card_id]){col[c.card_id].qty+=sheetQty;col[c.card_id].updated=new Date().toISOString();}
+  else{col[c.card_id]={id:c.card_id,name:c.name,set_name:c.set_name,set_id:c.set_id,
+    number:c.number,rarity:c.rarity,types:c.types,price:c.price_usd||0,
+    img:c.img_small,qty:sheetQty,condition:cond,added:new Date().toISOString(),updated:new Date().toISOString()};}
+  save();
+  const btn=document.getElementById('sheetAddBtn');
+  btn.innerHTML='<i class="ti ti-circle-check"></i> ¡Agregada!';btn.classList.add('added');
+  toast(`${c.name} en tu colección`,'ok');
+  if(lastCard)showMatch(lastCard);
+  setTimeout(closeSheet,900);
 }
 
-// ══════════════════════════
-//  INVENTORY
-// ══════════════════════════
-async function loadInventory(){
-  try{
-    const res=await fetch(API+'/api/inventory');
-    const d=await res.json();
-    inventory=Object.fromEntries(d.cards.map(c=>[c.card_id,c]));
-    renderInvSummary(d.stats);
-    renderInventory();
-    const n=d.cards.length;
-    const badge=document.getElementById('inv-badge');
-    badge.textContent=n; badge.style.display=n>0?'inline':'none';
-  }catch(e){ console.error(e); }
+// ── INVENTORY ──
+function renderInv(){
+  const cards=Object.values(col);
+  const el=document.getElementById('invSummary');
+  const listEl=document.getElementById('invList');
+  const totalVal=cards.reduce((s,c)=>s+(c.price||0)*c.qty,0);
+  const totalQty=cards.reduce((s,c)=>s+c.qty,0);
+  el.innerHTML=cards.length?`<div class="inv-summary">
+    <div class="is-item"><div class="is-val">${cards.length}</div><div class="is-lbl">Únicas</div></div>
+    <div class="is-item"><div class="is-val">${totalQty}</div><div class="is-lbl">Copias</div></div>
+    <div class="is-item"><div class="is-val">$${totalVal.toFixed(0)}</div><div class="is-lbl">USD est.</div></div>
+  </div>`:'';
+  const q=document.getElementById('invQ').value.toLowerCase();
+  const sort=document.getElementById('sortSel').value;
+  let list=cards.filter(c=>!q||c.name.toLowerCase().includes(q)||c.set_name.toLowerCase().includes(q));
+  if(sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sort==='qty')list.sort((a,b)=>b.qty-a.qty);
+  else list.sort((a,b)=>(b.price||0)*b.qty-(a.price||0)*a.qty);
+  if(!list.length){listEl.innerHTML=`<div class="empty"><div class="empty-icon"><i class="ti ti-stack-2"></i></div>
+    <h3>${q?'Sin resultados':'Colección vacía'}</h3>
+    <p>${q?'Prueba otro término':'Escanea cartas para empezar tu colección.'}</p></div>`;return;}
+  listEl.innerHTML=list.map(c=>`<div class="inv-row">
+    ${c.img?`<img class="inv-thumb" src="${c.img}" alt="${c.name}"/>`
+      :`<div class="inv-thumb" style="display:flex;align-items:center;justify-content:center;color:#9E9E9E"><i class="ti ti-cards" style="font-size:14px"></i></div>`}
+    <div class="inv-info">
+      <div class="inv-name">${c.name}<span class="cond-badge cond-${c.condition||'NM'}">${c.condition||'NM'}</span></div>
+      <div class="inv-sub">${c.set_name} · #${c.number}</div>
+      <div class="inv-price">${c.price?`$${(c.price*c.qty).toFixed(2)} USD · $${c.price.toFixed(2)} c/u`:'Sin precio'}</div>
+    </div>
+    <div class="qty-ctrl">
+      <button class="qb" onclick="adjInv('${c.id}',-1)">−</button>
+      <span class="qn">${c.qty}</span>
+      <button class="qb" onclick="adjInv('${c.id}',1)">+</button>
+    </div></div>`).join('');
 }
-function renderInvSummary(s){
-  if(!s)return;
-  document.getElementById('invSummary').innerHTML=`
-    <div class="inv-summary" style="margin-bottom:16px">
-      <div class="is-item"><div class="is-val">${s.total_unique}</div><div class="is-lbl">Cartas únicas</div></div>
-      <div class="is-item"><div class="is-val">${s.total_copies}</div><div class="is-lbl">Copias totales</div></div>
-      <div class="is-item"><div class="is-val">$${(s.total_value||0).toFixed(0)}</div><div class="is-lbl">Valor USD est.</div></div>
-      <div class="is-item"><div class="is-val">${Object.keys(s.by_type||{}).length}</div><div class="is-lbl">Tipos distintos</div></div>
-    </div>`;
-}
-function renderInventory(){
-  const filter=document.getElementById('invSearch').value.toLowerCase();
-  const sort=document.getElementById('sortSelect').value;
-  let cards=Object.values(inventory).filter(c=>
-    !filter||c.name.toLowerCase().includes(filter)||c.set_name.toLowerCase().includes(filter));
-  if(sort==='name') cards.sort((a,b)=>a.name.localeCompare(b.name));
-  else if(sort==='qty') cards.sort((a,b)=>b.quantity-a.quantity);
-  else if(sort==='value') cards.sort((a,b)=>(b.price_usd||0)*b.quantity-(a.price_usd||0)*a.quantity);
-  else cards.sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at));
-  const el=document.getElementById('invList');
-  if(!cards.length){
-    el.innerHTML=`<div class="empty"><div class="empty-icon"><i class="ti ti-stack-2"></i></div>
-      <h3>${filter?'Sin resultados':'Inventario vacío'}</h3>
-      <p>${filter?'Prueba otro término':'Escanea cartas para empezar tu colección física.'}</p></div>`;
-    return;
-  }
-  el.innerHTML=`<div class="inv-list">${cards.map(c=>`
-    <div class="inv-row">
-      ${c.img_small?`<img class="inv-thumb" src="${c.img_small}" alt="${c.name}"/>`
-        :`<div class="inv-thumb" style="display:flex;align-items:center;justify-content:center;color:#9E9E9E"><i class="ti ti-cards" style="font-size:14px"></i></div>`}
-      <div class="inv-details">
-        <div class="inv-name">${c.name}<span class="cond-badge cond-${c.condition}">${c.condition}</span></div>
-        <div class="inv-sub">${c.set_name} · #${c.number}</div>
-        <div class="inv-price">${c.price_usd?`$${(c.price_usd*c.quantity).toFixed(2)} USD total · $${c.price_usd.toFixed(2)} c/u`:'Sin precio'}</div>
-      </div>
-      <div class="qty-ctrl">
-        <button class="qb" onclick="adjInv('${c.card_id}',-1)">−</button>
-        <span class="qn">${c.quantity}</span>
-        <button class="qb" onclick="adjInv('${c.card_id}',1)">+</button>
-      </div>
-    </div>`).join('')}</div>`;
-}
-async function adjInv(id,delta){
-  try{
-    await fetch(API+'/api/inventory/'+id,{method:'PATCH',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({delta})});
-    loadInventory();
-  }catch(e){ toast('Error: '+e.message,'err'); }
+function adjInv(id,d){
+  if(!col[id])return;
+  col[id].qty=Math.max(0,col[id].qty+d);
+  if(col[id].qty===0){delete col[id];toast('Carta eliminada');}
+  save();renderInv();
 }
 
-// ══════════════════════════
-//  DECKS
-// ══════════════════════════
-async function loadDecks(){
-  document.getElementById('deckList').innerHTML=
-    `<div class="empty"><div class="empty-icon"><i class="ti ti-loader spin"></i></div><p>Analizando tu colección…</p></div>`;
-  try{
-    const res=await fetch(API+'/api/decks');
-    const d=await res.json();
-    renderDeckSummary(d.summary);
-    renderDecks(d.decks||[]);
-  }catch(e){
-    document.getElementById('deckList').innerHTML=
-      `<div class="empty"><div class="empty-icon"><i class="ti ti-wifi-off"></i></div><h3>Sin conexión</h3><p>${e.message}</p></div>`;
-  }
-}
-function renderDeckSummary(s){
-  if(!s)return;
-  document.getElementById('deckSummaryBox').innerHTML=`
-    <div class="panel"><div class="panel-body">
-      <div class="grid3">
-        <div class="stat-box"><div class="stat-val">${s.total_archetypes}</div><div class="stat-lbl">Arquetipos meta</div></div>
-        <div class="stat-box"><div class="stat-val" style="color:var(--green)">${s.buildable_count}</div><div class="stat-lbl">Puedes armar</div></div>
-        <div class="stat-box"><div class="stat-val" style="font-size:14px">${s.best_deck||'—'}</div><div class="stat-lbl">Más completo (${s.best_pct}%)</div></div>
-      </div>
-    </div></div>`;
-}
-function renderDecks(decks){
-  const el=document.getElementById('deckList');
-  if(!decks.length){ el.innerHTML='<p style="color:var(--muted);text-align:center">Sin arquetipos disponibles</p>'; return; }
-  el.innerHTML=decks.map(deck=>{
-    const pct=deck.completion_pct;
-    const col=pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--red)';
-    const r=22,circ=2*Math.PI*r,dash=circ*(pct/100);
+// ── DECKS ──
+function renderDecks(){
+  const results=META.map(deck=>{
+    const needed=deck.slots.reduce((s,c)=>s+c.qty,0);
+    let have=0,missing=[];
+    deck.slots.forEach(s=>{
+      const hq=col[s.ids[0]]?Math.min(col[s.ids[0]].qty,s.qty):0;
+      have+=hq;
+      if(s.qty-hq>0)missing.push({...s,miss:s.qty-hq});
+    });
+    const pct=Math.round(have/needed*100);
+    const missCost=missing.reduce((s,c)=>s+(c.price||0)*c.miss,0);
+    const totalCost=deck.slots.reduce((s,c)=>s+(c.price||0)*c.qty,0);
+    return{...deck,pct,have,needed,missing,missCost,totalCost,buildable:pct>=90};
+  }).sort((a,b)=>b.pct-a.pct);
+
+  const buildable=results.filter(r=>r.buildable).length;
+  document.getElementById('deckSummary').innerHTML=`<div class="panel"><div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px"><div style="font-size:20px;font-weight:700;color:var(--blue2)">${results.length}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Arquetipos</div></div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px"><div style="font-size:20px;font-weight:700;color:var(--green)">${buildable}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Puedes armar</div></div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px"><div style="font-size:14px;font-weight:700;color:var(--text)">${results[0].pct}%</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${results[0].name}</div></div>
+  </div></div>`;
+
+  document.getElementById('deckList').innerHTML=results.map(deck=>{
+    const col2=deck.pct>=70?'var(--green)':deck.pct>=40?'var(--orange)':'var(--red)';
+    const r=22,circ=2*Math.PI*r,dash=circ*(deck.pct/100);
     const tierC={S:'tier-S',A:'tier-A',B:'tier-B'}[deck.tier]||'tier-B';
-    const statusSection=deck.buildable
-      ?`<div class="deck-complete"><i class="ti ti-circle-check"></i> ¡Puedes armar este mazo ahora mismo!</div>`
-      :`<div style="margin-bottom:8px">
-          ${deck.missing_key.length?`<div class="stitle" style="margin-top:0"><i class="ti ti-key" style="font-size:13px"></i> Cartas clave faltantes</div>
-            <div class="missing-key">${deck.missing_key.map(n=>`<span class="chip chip-miss"><i class="ti ti-x"></i>${n}</span>`).join('')}</div>`:''}
-        </div>`;
-    const costs=`<div class="deck-cost">
-      Tienes <strong>${deck.owned_cards}/${deck.total_cards}</strong> cartas ·
-      Faltan <strong>${deck.missing_cards}</strong> ·
-      Completar: <strong style="color:var(--orange)">$${deck.missing_cost.toFixed(2)} USD</strong> ·
-      Mazo completo: <strong>$${deck.total_cost.toFixed(2)} USD</strong>
-    </div>`;
-    // Slot table
-    const slotHtml=deck.slots?.map(s=>{
-      if(s.required_qty===0)return'';
-      const stCl={complete:'ss-complete',partial:'ss-partial',missing:'ss-missing'}[s.status];
-      const stIc={complete:'ti-check',partial:'ti-minus',missing:'ti-x'}[s.status];
-      const roleIc={main_attacker:'ti-sword',engine:'ti-settings',evolution:'ti-arrow-up',
-        supporter:'ti-user',item:'ti-package',energy:'ti-bolt',stadium:'ti-building',
-        tool:'ti-tool',attacker:'ti-sword',tech:'ti-flask'}[s.role]||'ti-card';
-      return`<tr>
-        <td><i class="ti ${roleIc} role-icon"></i></td>
-        <td style="font-weight:500">${s.slot_name}</td>
-        <td style="color:var(--muted)">${s.notes}</td>
-        <td style="text-align:center"><span style="font-weight:600">${s.owned_qty}</span>/<span style="color:var(--muted)">${s.required_qty}</span></td>
-        <td><span class="slot-status ${stCl}"><i class="ti ${stIc}"></i>${s.status==='complete'?'Completa':s.status==='partial'?`Faltan ${s.missing_qty}`:'Falta toda'}</span></td>
-        <td style="color:var(--orange);font-weight:500">${s.missing_qty>0&&s.price_usd?`$${(s.price_usd*s.missing_qty).toFixed(2)}`:s.missing_qty===0?'':'—'}</td>
-      </tr>`;
-    }).join('')||'';
-    const uid='deck-'+deck.archetype_id;
+    const uid='d-'+deck.id;
+    const slots=deck.slots.map(s=>{
+      const hq=col[s.ids[0]]?Math.min(col[s.ids[0]].qty,s.qty):0;
+      const mq=s.qty-hq;
+      const st=mq===0?'ok':hq>0?'par':'mis';
+      const stCl={ok:'ss-ok',par:'ss-par',mis:'ss-mis'}[st];
+      const stTx={ok:'Completa',par:`Faltan ${mq}`,mis:'Falta toda'}[st];
+      return`<tr><td style="color:var(--muted);font-size:10px">${s.role}</td>
+        <td style="font-weight:500">${s.name}</td>
+        <td style="text-align:center">${hq}/${s.qty}</td>
+        <td><span class="ss ${stCl}"><i class="ti ${st==='ok'?'ti-check':st==='par'?'ti-minus':'ti-x'}" style="font-size:9px"></i>${stTx}</span></td>
+        <td style="color:var(--orange);font-size:10px">${mq>0&&s.price?`$${(s.price*mq).toFixed(2)}`:''}</td></tr>`;
+    }).join('');
     return`<div class="deck-card">
       <div class="deck-top">
-        <div class="deck-meta">
+        <div style="flex:1">
           <div><span class="tier-badge ${tierC}">Tier ${deck.tier}</span>
-            <span style="font-size:11px;color:var(--muted);margin-left:6px">${deck.format} · ${deck.style}</span></div>
+            <span style="font-size:10px;color:var(--muted);margin-left:5px">${deck.format} · ${deck.style}</span></div>
           <div class="deck-name">${deck.name}</div>
         </div>
-        <svg class="pct-circle" viewBox="0 0 52 52" aria-label="${pct}% completado">
+        <svg class="pct-circle" viewBox="0 0 52 52">
           <circle cx="26" cy="26" r="${r}" fill="none" stroke="var(--border)" stroke-width="4"/>
-          <circle class="pct-ring" cx="26" cy="26" r="${r}" fill="none" stroke="${col}"
+          <circle class="pct-ring" cx="26" cy="26" r="${r}" fill="none" stroke="${col2}"
             stroke-width="4" stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"/>
-          <text x="26" y="31" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">${Math.round(pct)}%</text>
+          <text x="26" y="31" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">${deck.pct}%</text>
         </svg>
       </div>
-      <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="prog-track"><div class="prog-fill" style="width:${deck.pct}%;background:${col2}"></div></div>
       <div class="deck-desc">${deck.description}</div>
-      <div class="deck-nums">
-        <span class="deck-num">🎴 ${deck.total_cards} cartas</span>
-        <span class="deck-num">⚡ Pokémon: ${deck.pokemon_count||'—'}</span>
-        <span class="deck-num">🃏 Entrenadores: ${deck.trainer_count||'—'}</span>
-        <span class="deck-num">🔋 Energías: ${deck.energy_count||'—'}</span>
-      </div>
-      ${costs}${statusSection}
-      <button class="collapsible-btn" onclick="toggleSlots('${uid}')">
-        <span><i class="ti ti-list-details" style="margin-right:6px"></i>Ver lista completa de cartas</span>
+      <div class="deck-cost">Tienes <strong>${deck.have}/${deck.needed}</strong> cartas · Completar: <strong style="color:var(--orange)">$${deck.missCost.toFixed(2)} USD</strong> · Total mazo: <strong>$${deck.totalCost.toFixed(2)} USD</strong></div>
+      ${deck.buildable
+        ?`<div class="deck-complete"><i class="ti ti-circle-check"></i> ¡Puedes armar este mazo ahora!</div>`
+        :`<div class="missing-chips">${deck.missing.filter(m=>['main_attacker','engine'].includes(m.role)).map(m=>`<span class="chip chip-miss"><i class="ti ti-x"></i>${m.name} ×${m.miss}</span>`).join('')}</div>`}
+      <button class="collapse-btn" onclick="toggleDeck('${uid}')">
+        <span><i class="ti ti-list-details" style="margin-right:5px"></i>Ver lista completa</span>
         <i class="ti ti-chevron-down" id="chev-${uid}"></i>
       </button>
-      <div class="collapsible-content" id="${uid}">
-        <div style="overflow-x:auto;margin-top:10px">
-          <table class="slot-table">
-            <thead><tr>
-              <th></th><th>Carta</th><th>Notas</th>
-              <th style="text-align:center">Tengo/Necesito</th>
-              <th>Estado</th><th>Precio faltante</th>
-            </tr></thead>
-            <tbody>${slotHtml}</tbody>
-          </table>
-        </div>
+      <div class="collapse-content" id="${uid}">
+        <table class="slot-table">
+          <thead><tr><th>Rol</th><th>Carta</th><th>Tengo/Nec.</th><th>Estado</th><th>Faltante</th></tr></thead>
+          <tbody>${slots}</tbody>
+        </table>
       </div>
     </div>`;
   }).join('');
 }
-function toggleSlots(uid){
-  const c=document.getElementById(uid);
-  const ch=document.getElementById('chev-'+uid);
-  c.classList.toggle('open');
-  ch.style.transform=c.classList.contains('open')?'rotate(180deg)':'';
+function toggleDeck(uid){
+  const c=document.getElementById(uid);const ch=document.getElementById('chev-'+uid);
+  c.classList.toggle('open');ch.style.transform=c.classList.contains('open')?'rotate(180deg)':'';
 }
 
-// ══════════════════════════
-//  HEALTH CHECK
-// ══════════════════════════
-async function refreshAll(){
-  try{
-    const r=await fetch(API+'/api/health');
-    const d=await r.json();
-    document.getElementById('libInfo').textContent=
-      d.library_ready
-        ?`✅ ${d.total_cards.toLocaleString()} cartas indexadas · OpenCV ${d.opencv}`
-        :`⚠ Biblioteca no generada · Usando API remota · OpenCV ${d.opencv}`;
-    loadInventory();
-  }catch{
-    document.getElementById('libInfo').textContent='❌ Sin conexión con el servidor';
-  }
-}
-document.addEventListener('DOMContentLoaded',()=>{ refreshAll(); loadInventory(); });
+init();
+document.getElementById('invQ').addEventListener('keyup',()=>renderInv());
 </script>
 </body>
 </html>
